@@ -1,0 +1,1 @@
+export function GET(){return new Response('User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /quan-tri\nDisallow: /tai-khoan\nDisallow: /thanh-toan\nDisallow: /gio-hang\nSitemap: https://phonestore-duy-vn.comfymound1.chatgpt.site/sitemap.xml',{headers:{'Content-Type':'text/plain; charset=utf-8'}})}

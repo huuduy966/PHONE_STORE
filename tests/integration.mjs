@@ -1,0 +1,49 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
+import {randomUUID,randomBytes} from 'node:crypto';
+
+const base=process.env.TEST_BASE_URL||'http://127.0.0.1:5173';
+if(!/^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(base))throw Error('Tests only run against a local database.');
+mkdirSync('.sites-runtime',{recursive:true});
+const credentialFile='.sites-runtime/qa-credential.json';
+const password=existsSync(credentialFile)?JSON.parse(readFileSync(credentialFile,'utf8')).password:'TestA1'+randomBytes(16).toString('hex');
+writeFileSync(credentialFile,JSON.stringify({password}));
+const setup=readFileSync('.dev.vars','utf8').match(/^ADMIN_SETUP_TOKEN=(.+)$/m)?.[1];
+let passed=0;
+async function request(path,{method='GET',data,cookie,key,origin}={}){const r=await fetch(base+'/api/v1/'+path,{method,headers:{'Content-Type':'application/json',...(cookie?{cookie}:{}),...(key?{'idempotency-key':key}:{}),...(origin?{origin}:{})},...(data?{body:JSON.stringify(data)}:{})});return {status:r.status,data:await r.text().then(t=>{try{return JSON.parse(t)}catch{return {error:t}}}),cookie:r.headers.get('set-cookie')?.split(';')[0]};}
+function check(condition,label){assert.ok(condition,label);passed++;console.log('PASS '+label)}
+let r=await request('products');check(r.status===200&&r.data.products.length>=9,'Catalog loads from D1');
+const original=r.data.products.find(p=>p.id==='apple-charger-20w');
+let admin=await request('auth/register',{method:'POST',data:{name:'QA Administrator',email:'qa-admin@example.test',password,setupToken:setup}});
+if(admin.status===409)admin=await request('auth/login',{method:'POST',data:{email:'qa-admin@example.test',password}});
+check(admin.status===200&&admin.data.user.role==='admin','One-time admin setup');
+const customer=await request('auth/register',{method:'POST',data:{name:'QA Customer',email:'qa-'+randomUUID()+'@example.test',password}});
+check(customer.status===200&&customer.data.user.role==='customer','Customer registration');
+check((await request('admin/overview',{cookie:customer.cookie})).status===403,'Customer denied admin API (403)');
+check((await request('admin/overview')).status===401,'Anonymous denied admin API');
+check((await request('me',{method:'PATCH',cookie:customer.cookie,data:{name:'QA Customer',phone:'',addresses:[],wishlist:[]},origin:'https://untrusted.example'})).status===403,'Cross-origin mutation blocked');
+const variants=original.variants.map(v=>({...v,stock:v.id===original.variants[0].id?1:v.stock}));
+r=await request('admin/products',{method:'PATCH',cookie:admin.cookie,data:{id:original.id,name:original.name,description:original.description,visible:true,variants}});check(r.status===200,'Admin can change variant stock');
+const variant=variants[0];const order={items:[{variantId:variant.id,quantity:1,price:variant.price}],recipient:{name:'QA Guest',phone:'0900000000',email:'qa@example.test',city:'Thành phố kiểm thử',district:'Khu vực kiểm thử',ward:'Phường kiểm thử',address:'Địa chỉ mẫu để kiểm thử',note:'Không giao hàng — local QA',delivery:'delivery',company:'',taxCode:'',companyAddress:''},payment:'COD',coupon:''};
+const bad=await request('orders',{method:'POST',data:{...order,items:[{...order.items[0],price:1}]},key:randomUUID()});check(bad.status===409,'Tampered price rejected');
+const keys=[randomUUID(),randomUUID()];const race=await Promise.all(keys.map(key=>request('orders',{method:'POST',data:order,key,cookie:customer.cookie})));
+check(race.filter(x=>x.status===201).length===1&&race.filter(x=>x.status===409).length===1,'Concurrent buyers: only one order for last unit');
+const winner=race.findIndex(x=>x.status===201);const placed=race[winner].data.order;
+check(placed.total===520000&&placed.shipping===30000,'Server calculates money and shipping');
+r=await request('orders',{method:'POST',data:order,key:keys[winner],cookie:customer.cookie});check(r.status===200&&r.data.order.code===placed.code,'Idempotent retry returns same order');
+r=await request('orders',{method:'POST',data:{...order,recipient:{...order.recipient,name:'Different'}},key:keys[winner],cookie:customer.cookie});check(r.status===409,'Idempotency key cannot be reused for different content');
+check((await request('orders/lookup',{method:'POST',data:{code:placed.code,phone:'0911111111'}})).status===404,'Order lookup requires matching phone');
+r=await request('orders/lookup',{method:'POST',data:{code:placed.code,phone:'0900000000'}});check(r.status===200&&r.data.order.code===placed.code,'Order tracking');
+r=await request('admin/orders/status',{method:'POST',cookie:admin.cookie,data:{code:placed.code,status:'Hoàn tất',note:'Invalid jump'}});check(r.status===409,'Invalid order transition rejected');
+r=await request('orders/'+placed.code+'/cancel',{method:'POST',cookie:customer.cookie,data:{}});check(r.status===200,'Customer cancels own eligible order');
+r=await request('orders/'+placed.code+'/cancel',{method:'POST',cookie:customer.cookie,data:{}});check(r.status===409,'Second cancellation rejected');
+r=await request('products');check(r.data.products.find(p=>p.id===original.id).variants.find(v=>v.id===variant.id).stock===1,'Cancellation restores exactly one unit');
+await request('admin/products',{method:'PATCH',cookie:admin.cookie,data:{id:original.id,name:original.name,description:original.description,visible:true,variants:original.variants}});
+check((await request('coupons/validate',{method:'POST',data:{code:'HELLO200',subtotal:5000000}})).data.discount===200000,'Coupon applies at threshold');
+check((await request('coupons/validate',{method:'POST',data:{code:'HELLO200',subtotal:4999999}})).status===400,'Coupon minimum enforced');
+await request('admin/coupons',{method:'POST',cookie:admin.cookie,data:{code:'QAEXPIRED',amount:1000,minimum:0,expires:'2020-01-01T00:00:00.000Z',remaining:1}});
+check((await request('coupons/validate',{method:'POST',data:{code:'QAEXPIRED',subtotal:5000000}})).status===400,'Expired coupon rejected');
+await request('auth/logout',{method:'POST',cookie:customer.cookie,data:{}});
+check((await request('orders',{cookie:customer.cookie})).status===401,'Logout revokes session on server');
+console.log(`\n${passed} integration checks passed. Local test records only; no production data touched.`);
+

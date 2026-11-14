@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {catalog,seedVariants,matches,totals,transitions} from '../lib/catalog.ts';
+assert.ok(matches(catalog[0],'iphone'));
+assert.ok(matches(catalog[0],'iphon 15'));
+assert.ok(matches(catalog[0],'dien thoai'));
+assert.equal(matches(catalog[0],'samsung'),false);
+assert.equal(new Set(catalog.flatMap(seedVariants).map(v=>v.id)).size,catalog.flatMap(seedVariants).length);
+assert.deepEqual(totals([{price:490000,quantity:2}]),{subtotal:980000,shipping:30000,discount:0,total:1010000});
+assert.equal(totals([{price:1000000,quantity:2}],200000).total,1800000);
+assert.equal(totals([{price:1000000,quantity:2}],9999999).total,0);
+assert.equal(transitions['Hoàn tất'].length,0);
+assert.ok(!transitions['Chờ xác nhận'].includes('Đã giao'));
+console.log('10 core checks passed: search, variants, money, shipping, state transitions.');
