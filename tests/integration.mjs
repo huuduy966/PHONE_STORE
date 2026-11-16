@@ -8,11 +8,11 @@ mkdirSync('.sites-runtime',{recursive:true});
 const credentialFile='.sites-runtime/qa-credential.json';
 const password=existsSync(credentialFile)?JSON.parse(readFileSync(credentialFile,'utf8')).password:'TestA1'+randomBytes(16).toString('hex');
 writeFileSync(credentialFile,JSON.stringify({password}));
-const setup=readFileSync('.dev.vars','utf8').match(/^ADMIN_SETUP_TOKEN=(.+)$/m)?.[1];
+const setup=process.env.ADMIN_SETUP_TOKEN||(existsSync('.dev.vars')&&readFileSync('.dev.vars','utf8').match(/^ADMIN_SETUP_TOKEN=(.+)$/m)?.[1])||(existsSync('.env')&&readFileSync('.env','utf8').match(/^ADMIN_SETUP_TOKEN=(.+)$/m)?.[1]);
 let passed=0;
 async function request(path,{method='GET',data,cookie,key,origin}={}){const r=await fetch(base+'/api/v1/'+path,{method,headers:{'Content-Type':'application/json',...(cookie?{cookie}:{}),...(key?{'idempotency-key':key}:{}),...(origin?{origin}:{})},...(data?{body:JSON.stringify(data)}:{})});return {status:r.status,data:await r.text().then(t=>{try{return JSON.parse(t)}catch{return {error:t}}}),cookie:r.headers.get('set-cookie')?.split(';')[0]};}
 function check(condition,label){assert.ok(condition,label);passed++;console.log('PASS '+label)}
-let r=await request('products');check(r.status===200&&r.data.products.length>=9,'Catalog loads from D1');
+let r=await request('products');check(r.status===200&&r.data.products.length>=9,'Catalog loads from database');
 const original=r.data.products.find(p=>p.id==='apple-charger-20w');
 let admin=await request('auth/register',{method:'POST',data:{name:'QA Administrator',email:'qa-admin@example.test',password,setupToken:setup}});
 if(admin.status===409)admin=await request('auth/login',{method:'POST',data:{email:'qa-admin@example.test',password}});
@@ -23,7 +23,7 @@ check((await request('admin/overview',{cookie:customer.cookie})).status===403,'C
 check((await request('admin/overview')).status===401,'Anonymous denied admin API');
 check((await request('coupons')).status===401,'Voucher list requires account login');
 check((await request('me',{method:'PATCH',cookie:customer.cookie,data:{name:'QA Customer',phone:'',addresses:[],wishlist:[]},origin:'https://untrusted.example'})).status===403,'Cross-origin mutation blocked');
-const variants=original.variants.map(v=>({...v,stock:v.id===original.variants[0].id?1:v.stock}));
+const variants=original.variants.map(v=>({id:v.id,price:v.price,stock:v.id===original.variants[0].id?1:v.stock}));
 r=await request('admin/products',{method:'PATCH',cookie:admin.cookie,data:{id:original.id,name:original.name,description:original.description,visible:true,variants}});check(r.status===200,'Admin can change variant stock');
 const variant=variants[0];const order={items:[{variantId:variant.id,quantity:1,price:variant.price}],recipient:{name:'QA Guest',phone:'0900000000',email:'qa@example.test',city:'Thành phố Hà Nội',district:'',ward:'Phường Ba Đình',address:'Địa chỉ mẫu để kiểm thử',note:'Không giao hàng — local QA',delivery:'delivery',company:'',taxCode:'',companyAddress:''},payment:'COD',coupon:''};
 check((await request('orders',{method:'POST',data:{...order,recipient:{...order.recipient,ward:'Phường Bến Thành'}},key:randomUUID()})).status===400,'Mismatched province and ward rejected');
@@ -40,7 +40,7 @@ r=await request('admin/orders/status',{method:'POST',cookie:admin.cookie,data:{c
 r=await request('orders/'+placed.code+'/cancel',{method:'POST',cookie:customer.cookie,data:{}});check(r.status===200,'Customer cancels own eligible order');
 r=await request('orders/'+placed.code+'/cancel',{method:'POST',cookie:customer.cookie,data:{}});check(r.status===409,'Second cancellation rejected');
 r=await request('products');check(r.data.products.find(p=>p.id===original.id).variants.find(v=>v.id===variant.id).stock===1,'Cancellation restores exactly one unit');
-await request('admin/products',{method:'PATCH',cookie:admin.cookie,data:{id:original.id,name:original.name,description:original.description,visible:true,variants:original.variants}});
+await request('admin/products',{method:'PATCH',cookie:admin.cookie,data:{id:original.id,name:original.name,description:original.description,visible:true,variants:original.variants.map(({id,price,stock})=>({id,price,stock}))}});
 check((await request('coupons/validate',{method:'POST',data:{code:'HELLO200',subtotal:5000000}})).data.discount===200000,'Coupon applies at threshold');
 check((await request('coupons/validate',{method:'POST',data:{code:'HELLO200',subtotal:4999999}})).status===400,'Coupon minimum enforced');
 check((await request('coupons',{cookie:customer.cookie})).data.coupons.some(c=>c.code==='HELLO200'&&c.amount===200000&&c.minimum===5000000),'Customer can view available vouchers');

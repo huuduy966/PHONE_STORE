@@ -2,7 +2,7 @@ import Storefront from '../storefront';
 import { getStoreProducts } from '@/lib/server';
 import { notFound } from 'next/navigation';
 export const dynamic='force-dynamic';
-const origin='https://phonestore-duy-vn.comfymound1.chatgpt.site';
+import {siteOrigin as origin} from '@/lib/site-origin';
 export async function generateMetadata({params}:{params:Promise<{path:string[]}>}) {const {path}=await params;const p=path[0]==='san-pham'?(await getStoreProducts()).find(p=>p.id===path[1]):null;return {title:p?.name||({'dien-thoai':'Khám phá sản phẩm','gio-hang':'Giỏ hàng','thanh-toan':'Thanh toán','tai-khoan':'Tài khoản','quan-tri':'Quản trị','tra-cuu':'Tra cứu đơn hàng'} as Record<string,string>)[path[0]]||'Khám phá PhoneStore',description:p?.description,alternates:{canonical:origin+'/'+path.join('/')},robots:['quan-tri','tai-khoan','thanh-toan','gio-hang','dat-hang-thanh-cong'].includes(path[0])?{index:false,follow:false}:undefined};}
 export default async function Page({params}:{params:Promise<{path:string[]}>}) {
  const {path}=await params;const products=await getStoreProducts();const product=path[0]==='san-pham'?products.find(p=>p.id===path[1]):null;

@@ -1,0 +1,9 @@
+import assert from 'node:assert/strict';
+import {createDatabase} from '../lib/database.ts';
+const db=createDatabase({url:'file::memory:'});
+await db.prepare('CREATE TABLE stock (id TEXT PRIMARY KEY, amount INTEGER CHECK (amount >= 0))').run();
+await db.prepare('INSERT INTO stock VALUES (?, ?)').bind('phone',1).run();
+assert.equal((await db.prepare('SELECT amount FROM stock WHERE id=?').bind('phone').first()).amount,1);
+await assert.rejects(db.batch([db.prepare('UPDATE stock SET amount=0 WHERE id=?').bind('phone'),db.prepare('UPDATE stock SET amount=-1 WHERE id=?').bind('phone')]));
+assert.equal((await db.prepare('SELECT amount FROM stock WHERE id=?').bind('phone').first()).amount,1);
+console.log('Database parameters and transaction rollback passed.');
