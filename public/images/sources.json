@@ -1,5 +1,170 @@
 [
   {
+    "file": "/images/iphone-16.jpg",
+    "model": "iPhone 16",
+    "source_page": "https://www.istore.com.ng",
+    "source_image": "https://www.istore.com.ng/cdn/shop/files/iPhone_16_Black_PDP_Image_Position_1__WWEN_1200x.png?v=1727187615",
+    "width": 1000,
+    "height": 1000,
+    "format": "jpeg",
+    "color": "Đen",
+    "bytes": 41888
+  },
+  {
+    "file": "/images/galaxy-a56.png",
+    "model": "Samsung Galaxy A56 5G",
+    "source_page": "https://www.samsung.com/uk/smartphones/galaxy-a/galaxy-a56-5g-awesome-lightgrey-256gb-sm-a566bzaceub/",
+    "source_image": "https://images.samsung.com/is/image/samsung/p6pim/uk/sm-a566bzaceub/gallery/uk-galaxy-a56-5g-sm-a566-sm-a566bzaceub-thumb-545178551",
+    "width": 330,
+    "height": 330,
+    "format": "png"
+  },
+  {
+    "file": "/images/ipad-air-m3.jpg",
+    "model": "iPad Air 11 inch M3",
+    "source_page": "https://alasil.ae",
+    "source_image": "https://alasil.ae/cdn/shop/files/ipad-air-wifi-front-blue.webp?v=1773131719",
+    "width": 2048,
+    "height": 2048,
+    "format": "jpeg",
+    "color": "Xanh dương",
+    "bytes": 251914
+  },
+  {
+    "file": "/images/galaxy-tab-s10-fe.png",
+    "model": "Samsung Galaxy Tab S10 FE",
+    "source_page": "https://assets.getmobil.com",
+    "source_image": "https://assets.getmobil.com/uploads/7e1cf71f-68bd-4bae-967c-33260f15271a/getmobil-samsung-galaxy-tab-s10-fe-wi-fi-mavi-1-.webp",
+    "width": 3240,
+    "height": 3240,
+    "format": "png",
+    "color": "Xanh dương",
+    "bytes": 817112
+  },
+  {
+    "file": "/images/airpods-4.jpg",
+    "model": "AirPods 4",
+    "source_page": "https://www.apple.com/newsroom/2024/09/apple-introduces-airpods-4-and-a-hearing-health-experience-with-airpods-pro-2/",
+    "source_image": "https://www.apple.com/newsroom/images/2024/09/apple-introduces-airpods-4/article/Apple-AirPods-4-with-case-240909_big.jpg.large.jpg",
+    "width": 980,
+    "height": 551,
+    "format": "jpeg"
+  },
+  {
+    "file": "/images/galaxy-buds3.png",
+    "model": "Samsung Galaxy Buds3",
+    "source_page": "https://www.samsung.com/uk/audio-sound/galaxy-buds/galaxy-buds3-silver-sm-r530nzaaeua/",
+    "source_image": "https://images.samsung.com/is/image/samsung/p6pim/uk/2407/gallery/uk-galaxy-buds3-r530-sm-r530nzaaeua-542217403",
+    "width": 1920,
+    "height": 1280,
+    "format": "png"
+  },
+  {
+    "file": "/images/galaxy-s23-product.png",
+    "model": "Samsung Galaxy S23",
+    "source_page": "https://www.samsung.com/rs/smartphones/galaxy-s/galaxy-s23-cream-128gb-sm-s911bzedeuc/",
+    "source_image": "https://images.samsung.com/is/image/samsung/p6pim/rs/2302/gallery/rs-galaxy-s23-s911-sm-s911bzedeuc-534776698",
+    "bytes": 813962,
+    "width": 1920,
+    "height": 1280,
+    "format": "png"
+  },
+  {
+    "file": "/images/redmi-note-13.png",
+    "model": "Redmi Note 13",
+    "source_page": "https://www.mi.com/global/product/redmi-note-13/",
+    "source_image": "https://i02.appmifile.com/994_operatorx_operatorx_opx/11/01/2024/72a71b312950178179eeb71425ef8def.png",
+    "bytes": 2138661,
+    "width": 1600,
+    "height": 1600,
+    "format": "png"
+  },
+  {
+    "file": "/images/oppo-reno10.png",
+    "model": "OPPO Reno10 5G",
+    "source_page": "https://www.oppo.com/vn/smartphones/series-reno/reno10/",
+    "source_image": "https://www.oppo.com/content/dam/oppo/common/mkt/v2-2/reno10-5g-en/listpage/reno10-5g-427_600-blue.png",
+    "bytes": 97974,
+    "width": 427,
+    "height": 600,
+    "format": "png"
+  },
+  {
+    "file": "/images/galaxy-tab-s9-product.png",
+    "model": "Samsung Galaxy Tab S9",
+    "source_page": "https://www.samsung.com/es/business/tablets/galaxy-tab-s/galaxy-tab-s9-wifi-sm-x710nzaeeub/buy/",
+    "source_image": "https://images.samsung.com/is/image/samsung/p6pim/es/sm-x710nzaeeub/gallery/es-galaxy-tab-s9-wifi-x710-sm-x710nzaeeub-537988954",
+    "bytes": 840870,
+    "width": 1920,
+    "height": 1280,
+    "format": "png"
+  },
+  {
+    "file": "/images/airpods-3.jpg",
+    "model": "AirPods thế hệ 3",
+    "source_page": "https://www.apple.com/newsroom/2021/10/introducing-the-next-generation-of-airpods/",
+    "source_image": "https://www.apple.com/newsroom/images/product/airpods/standard/Apple_AirPods-3rd-gen_hero_10182021.jpg.og.jpg",
+    "bytes": 19915,
+    "width": 1200,
+    "height": 630,
+    "format": "jpeg"
+  },
+  {
+    "file": "/images/iphone-x-official.png",
+    "model": "iPhone X",
+    "source_page": "https://applecity.com.ua",
+    "source_image": "https://applecity.com.ua/image/cache/catalog/0iphone/ipohnex/iphone-x-black-1000x1000.png",
+    "bytes": 256052,
+    "width": 1000,
+    "height": 1000,
+    "format": "png",
+    "color": "Xám không gian"
+  },
+  {
+    "file": "/images/iphone-11-official.jpg",
+    "model": "iPhone 11",
+    "source_page": "https://www.machines.com.my",
+    "source_image": "https://www.machines.com.my/cdn/shop/products/iPhone11_White_product_image_f0eb1683-61e9-43f5-8350-bff4d9d876ef.jpg?v=1705408994",
+    "bytes": 43328,
+    "width": 800,
+    "height": 800,
+    "format": "jpeg",
+    "color": "Trắng"
+  },
+  {
+    "file": "/images/iphone-12-official.jpg",
+    "model": "iPhone 12",
+    "source_page": "https://www.istore.com.ng",
+    "source_image": "https://www.istore.com.ng/cdn/shop/products/12blk_e3b2b6d5-e7e7-4ecf-9f01-abd3d324bbf3_2048x.png?v=1619669257",
+    "bytes": 38178,
+    "width": 1000,
+    "height": 1000,
+    "format": "jpeg",
+    "color": "Đen"
+  },
+  {
+    "file": "/images/iphone-13-official.png",
+    "model": "iPhone 13",
+    "source_page": "https://www.techstep.io",
+    "source_image": "https://www.techstep.io/hubfs/iPhone_13_Blue_Pure_Back_iPhone_13_Blue_Pure_Front_2-up_Screen__USEN.png",
+    "bytes": 260482,
+    "width": 1000,
+    "height": 1291,
+    "format": "png",
+    "color": "Xanh dương"
+  },
+  {
+    "file": "/images/iphone-14-official.png",
+    "model": "iPhone 14",
+    "source_page": "https://lmt-web.mstatic.lv",
+    "source_image": "https://lmt-web.mstatic.lv/eshop/11419/iPhone-14_blue_front_back.png",
+    "bytes": 2038702,
+    "width": 1298,
+    "height": 1642,
+    "format": "png",
+    "color": "Xanh dương"
+  },
+  {
     "file": "/images/galaxy-a55-purple.jpg",
     "model": "Samsung Galaxy A55",
     "color": "Lilac",

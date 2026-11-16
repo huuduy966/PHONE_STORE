@@ -1,0 +1,33 @@
+.search-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 48px;
+  right: 48px;
+  transform: translateY(-50%);
+  overflow: hidden;
+  pointer-events: none;
+  color: #858a81;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.search-placeholder > span {
+  display: inline-block;
+  clip-path: inset(0 100% 0 0);
+  animation: search-hint-cycle 6.2s ease-in-out infinite;
+}
+
+@keyframes search-hint-cycle {
+  0%, 7%, 100% { clip-path: inset(0 100% 0 0); }
+  38%, 60% { clip-path: inset(0 0 0 0); }
+  93% { clip-path: inset(0 100% 0 0); }
+}
+
+@media (max-width: 640px) {
+  .search-placeholder { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-placeholder > span { animation: none; clip-path: none; }
+}

@@ -2,6 +2,7 @@ import { env } from 'cloudflare:workers';
 import { hash, compare } from 'bcryptjs';
 import { z } from 'zod';
 import { catalog, seedVariants, transitions, totals, type Product } from './catalog';
+import {isValidLocation} from './vietnam-locations';
 
 class HttpError extends Error { constructor(public status:number,message:string){super(message)} }
 const fail=(status:number,message:string):never=>{throw new HttpError(status,message)};
@@ -9,9 +10,10 @@ const db=()=>{if(!env.DB) return fail(503,'Cơ sở dữ liệu chưa sẵn sàn
 let seeded=false;
 async function seed(){
   if(seeded)return;
-  const existing=await db().prepare('SELECT id FROM products LIMIT 1').first();
-  if(!existing){
-    const stmts=catalog.flatMap(p=>[db().prepare('INSERT OR IGNORE INTO products (id,data,visible) VALUES (?,?,1)').bind(p.id,JSON.stringify(p)),...seedVariants(p).map(v=>db().prepare('INSERT OR IGNORE INTO variants (id,product_id,color,storage,image,price,stock) VALUES (?,?,?,?,?,?,?)').bind(v.id,v.productId,v.color,v.storage,v.image,v.price,v.stock))]);
+  const existing=await db().prepare('SELECT id FROM products').all<{id:string}>();
+  const missing=catalog.filter(p=>!existing.results.some(row=>row.id===p.id));
+  if(missing.length || !existing.results.length){
+    const stmts=missing.flatMap(p=>[db().prepare('INSERT OR IGNORE INTO products (id,data,visible) VALUES (?,?,1)').bind(p.id,JSON.stringify(p)),...seedVariants(p).map(v=>db().prepare('INSERT OR IGNORE INTO variants (id,product_id,color,storage,image,price,stock) VALUES (?,?,?,?,?,?,?)').bind(v.id,v.productId,v.color,v.storage,v.image,v.price,v.stock))]);
     stmts.push(db().prepare('INSERT OR IGNORE INTO coupons (code,amount,minimum,expires,remaining) VALUES (?,?,?,?,?)').bind('HELLO200',200000,5000000,'2027-12-31T16:59:59.000Z',100));
     await db().batch(stmts);
   }
@@ -29,7 +31,7 @@ async function body(req:Request){const raw=await req.text();if(raw.length>50000)
 async function rate(req:Request,key:string,max=10){const ip=req.headers.get('cf-connecting-ip')||'local';const id=await digest(`${key}:${ip}`);const now=Date.now();await db().prepare('INSERT INTO rate_limits (key,attempts,expires) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET attempts=CASE WHEN expires<? THEN 1 ELSE attempts+1 END, expires=CASE WHEN expires<? THEN ? ELSE expires END').bind(id,now+900000,now,now,now+900000).run();const row=await db().prepare('SELECT attempts FROM rate_limits WHERE key=?').bind(id).first<{attempts:number}>();if(row!.attempts>max)fail(429,'Bạn thao tác quá nhiều lần. Vui lòng thử lại sau 15 phút.');}
 const phone=z.string().regex(/^(0[35789]\d{8}|\+84[35789]\d{8})$/,'Số điện thoại Việt Nam không hợp lệ.');
 const registerSchema=z.object({name:z.string().trim().min(2).max(100),email:z.string().email().max(150).transform(s=>s.toLowerCase().trim()),password:z.string().min(10,'Mật khẩu cần ít nhất 10 ký tự.').max(72).regex(/[A-Z]/,'Cần ít nhất một chữ hoa.').regex(/[a-z]/,'Cần ít nhất một chữ thường.').regex(/\d/,'Cần ít nhất một chữ số.'),setupToken:z.string().optional()});
-const recipientSchema=z.object({name:z.string().trim().min(2).max(100),phone,email:z.union([z.string().email().max(150),z.literal('')]),city:z.string().trim().min(2).max(80),district:z.string().trim().min(1).max(80),ward:z.string().trim().min(1).max(80),address:z.string().trim().min(5).max(250),note:z.string().max(500).default(''),delivery:z.enum(['delivery','pickup']),company:z.string().max(150).default(''),taxCode:z.string().max(20).default(''),companyAddress:z.string().max(250).default('')});
+const recipientSchema=z.object({name:z.string().trim().min(2).max(100),phone,email:z.union([z.string().email().max(150),z.literal('')]),city:z.string().trim().min(2).max(80),district:z.string().trim().max(80).default(''),ward:z.string().trim().min(1).max(80),address:z.string().trim().min(5).max(250),note:z.string().max(500).default(''),delivery:z.enum(['delivery','pickup']),company:z.string().max(150).default(''),taxCode:z.string().max(20).default(''),companyAddress:z.string().max(250).default('')}).refine(data=>isValidLocation(data.city,data.ward),{path:['ward'],message:'Vui lòng chọn tỉnh/thành phố và phường/xã hợp lệ.'});
 const orderSchema=z.object({items:z.array(z.object({variantId:z.string().max(100),quantity:z.number().int().min(1).max(5),price:z.number().int().positive()})).min(1).max(30),recipient:recipientSchema,payment:z.literal('COD'),coupon:z.string().max(30).default('')});
 const orderView=(o:Record<string,unknown>)=>({code:o.code,recipient:JSON.parse(o.recipient as string),items:JSON.parse(o.items as string),subtotal:o.subtotal,discount:o.discount,shipping:o.shipping,total:o.total,payment:o.payment,status:o.status,createdAt:o.created_at,history:JSON.parse(o.history as string)});
 async function couponFor(code:string,subtotal:number){if(!code)return 0;const c=await db().prepare('SELECT * FROM coupons WHERE code=?').bind(code.toUpperCase()).first<{amount:number;minimum:number;expires:string;remaining:number}>();if(!c)fail(400,'Mã giảm giá không tồn tại.');if(new Date(c!.expires).getTime()<Date.now()||c!.remaining<1)fail(400,'Mã giảm giá đã hết hạn hoặc hết lượt sử dụng.');if(subtotal<c!.minimum)fail(400,`Mã áp dụng cho đơn từ ${c!.minimum.toLocaleString('vi-VN')}đ.`);return c!.amount;}
@@ -69,6 +71,7 @@ export async function handleApi(req:Request){try{
   if(path==='me/password'&&method==='POST'){
     const u=await requireUser(req);await rate(req,'password');const d=z.object({oldPassword:z.string().max(72),password:registerSchema.shape.password}).parse(await body(req));if(!await compare(d.oldPassword,u.password!))fail(400,'Mật khẩu hiện tại không đúng.');await db().batch([db().prepare('UPDATE users SET password=? WHERE id=?').bind(await hash(d.password,12),u.id),db().prepare('DELETE FROM sessions WHERE user_id=?').bind(u.id)]);return await loginResponse(req,u.id);
   }
+  if(path==='coupons'&&method==='GET'){await requireUser(req);const rows=await db().prepare('SELECT code,amount,minimum,expires FROM coupons WHERE remaining>0 AND expires>? ORDER BY expires ASC').bind(new Date().toISOString()).all();return json({coupons:rows.results});}
   if(path==='coupons/validate'&&method==='POST'){const d=z.object({code:z.string().max(30),subtotal:z.number().int().nonnegative()}).parse(await body(req));return json({discount:await couponFor(d.code,d.subtotal)});}
   if(path==='orders'&&method==='POST'){
     await rate(req,'order',30);const d=orderSchema.parse(await body(req));const key=req.headers.get('idempotency-key')||'';if(!/^[a-f0-9-]{36}$/.test(key))fail(400,'Thiếu mã chống tạo đơn trùng.');

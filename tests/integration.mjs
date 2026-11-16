@@ -21,10 +21,12 @@ const customer=await request('auth/register',{method:'POST',data:{name:'QA Custo
 check(customer.status===200&&customer.data.user.role==='customer','Customer registration');
 check((await request('admin/overview',{cookie:customer.cookie})).status===403,'Customer denied admin API (403)');
 check((await request('admin/overview')).status===401,'Anonymous denied admin API');
+check((await request('coupons')).status===401,'Voucher list requires account login');
 check((await request('me',{method:'PATCH',cookie:customer.cookie,data:{name:'QA Customer',phone:'',addresses:[],wishlist:[]},origin:'https://untrusted.example'})).status===403,'Cross-origin mutation blocked');
 const variants=original.variants.map(v=>({...v,stock:v.id===original.variants[0].id?1:v.stock}));
 r=await request('admin/products',{method:'PATCH',cookie:admin.cookie,data:{id:original.id,name:original.name,description:original.description,visible:true,variants}});check(r.status===200,'Admin can change variant stock');
-const variant=variants[0];const order={items:[{variantId:variant.id,quantity:1,price:variant.price}],recipient:{name:'QA Guest',phone:'0900000000',email:'qa@example.test',city:'Thành phố kiểm thử',district:'Khu vực kiểm thử',ward:'Phường kiểm thử',address:'Địa chỉ mẫu để kiểm thử',note:'Không giao hàng — local QA',delivery:'delivery',company:'',taxCode:'',companyAddress:''},payment:'COD',coupon:''};
+const variant=variants[0];const order={items:[{variantId:variant.id,quantity:1,price:variant.price}],recipient:{name:'QA Guest',phone:'0900000000',email:'qa@example.test',city:'Thành phố Hà Nội',district:'',ward:'Phường Ba Đình',address:'Địa chỉ mẫu để kiểm thử',note:'Không giao hàng — local QA',delivery:'delivery',company:'',taxCode:'',companyAddress:''},payment:'COD',coupon:''};
+check((await request('orders',{method:'POST',data:{...order,recipient:{...order.recipient,ward:'Phường Bến Thành'}},key:randomUUID()})).status===400,'Mismatched province and ward rejected');
 const bad=await request('orders',{method:'POST',data:{...order,items:[{...order.items[0],price:1}]},key:randomUUID()});check(bad.status===409,'Tampered price rejected');
 const keys=[randomUUID(),randomUUID()];const race=await Promise.all(keys.map(key=>request('orders',{method:'POST',data:order,key,cookie:customer.cookie})));
 check(race.filter(x=>x.status===201).length===1&&race.filter(x=>x.status===409).length===1,'Concurrent buyers: only one order for last unit');
@@ -41,8 +43,10 @@ r=await request('products');check(r.data.products.find(p=>p.id===original.id).va
 await request('admin/products',{method:'PATCH',cookie:admin.cookie,data:{id:original.id,name:original.name,description:original.description,visible:true,variants:original.variants}});
 check((await request('coupons/validate',{method:'POST',data:{code:'HELLO200',subtotal:5000000}})).data.discount===200000,'Coupon applies at threshold');
 check((await request('coupons/validate',{method:'POST',data:{code:'HELLO200',subtotal:4999999}})).status===400,'Coupon minimum enforced');
+check((await request('coupons',{cookie:customer.cookie})).data.coupons.some(c=>c.code==='HELLO200'&&c.amount===200000&&c.minimum===5000000),'Customer can view available vouchers');
 await request('admin/coupons',{method:'POST',cookie:admin.cookie,data:{code:'QAEXPIRED',amount:1000,minimum:0,expires:'2020-01-01T00:00:00.000Z',remaining:1}});
 check((await request('coupons/validate',{method:'POST',data:{code:'QAEXPIRED',subtotal:5000000}})).status===400,'Expired coupon rejected');
+check(!(await request('coupons',{cookie:customer.cookie})).data.coupons.some(c=>c.code==='QAEXPIRED'),'Expired vouchers are hidden');
 await request('auth/logout',{method:'POST',cookie:customer.cookie,data:{}});
 check((await request('orders',{cookie:customer.cookie})).status===401,'Logout revokes session on server');
 console.log(`\n${passed} integration checks passed. Local test records only; no production data touched.`);

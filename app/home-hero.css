@@ -1,0 +1,42 @@
+.launch-section { padding-top: 24px; }
+.launch-hero { --launch-ink: #25232b; position: relative; overflow: hidden; isolation: isolate; border-radius: 24px; background: linear-gradient(180deg, #e8ddf5, #e4d9f4); color: var(--launch-ink); border: 1px solid #d9cbea; }
+.launch-main { position: relative; min-height: 510px; }
+.launch-copy { position: relative; z-index: 2; width: 48%; padding: 72px 0 38px 48px; }
+.launch-copy h1 { margin: 20px 0 18px; color: var(--launch-ink); font-size: clamp(42px, 4.2vw, 64px); line-height: 1.08; font-weight: 650; letter-spacing: -3.5px; }
+.launch-copy > p { margin: 0; color: #706778; font-size: 13px; line-height: 1.85; }
+.launch-cta { display: inline-flex; align-items: center; justify-content: space-between; gap: 27px; margin-top: 25px; padding: 14px 19px; min-height: 48px; border-radius: 9px; color: #25301e; background: #c4f369; font-size: 12px; font-weight: 650; box-shadow: 0 5px 15px #5e793515, inset 0 1px #ffffff80; transition: background .2s, transform .2s; }
+.launch-cta:hover { background: #d1ff7f; transform: translateY(-2px); }
+.launch-art { position: absolute; width: 69%; top: 28px; bottom: 0; right: -2%; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.launch-art img { display: block; width: auto; height: 100%; max-width: 100%; object-fit: contain; mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent), linear-gradient(to bottom, transparent, #000 7%, #000 91%, transparent); mask-composite: intersect; animation: launch-drift 8s ease-in-out infinite; }
+.launch-edition { position: absolute; right: 15px; top: 42px; writing-mode: vertical-rl; font-size: 7px; letter-spacing: 2px; color: #7f738c; }
+.launch-hero a:focus-visible { outline: 2px solid #74549c; outline-offset: 4px; }
+@keyframes launch-drift { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-9px) rotate(1deg); } }
+@media (min-width: 1500px) {
+  .launch-main { min-height: 560px; }
+  .launch-copy { padding-top: 84px; padding-left: 58px; }
+  .launch-copy h1 { font-size: 68px; }
+}
+@media (max-width: 1050px) and (min-width: 701px) {
+
+  .launch-copy { width: 49%; padding-left: 30px; }
+  .launch-copy h1 { font-size: clamp(38px, 4.5vw, 48px); letter-spacing: -2.5px; }
+  .launch-main { min-height: 490px; }
+  .launch-art { right: -7%; width: 72%; }
+}
+@media (max-width: 700px) {
+  .launch-section { padding-top: 16px; }
+  .launch-hero { border-radius: 20px; }
+
+  .launch-main { min-height: 0; padding-top: 12px; }
+  .launch-copy { width: 100%; padding: 26px 25px 0; }
+  .launch-copy h1 { margin: 16px 0 14px; font-size: clamp(37px, 9vw, 49px); letter-spacing: -2px; line-height: 1.1; }
+  .launch-copy > p { font-size: 12px; }
+  .launch-cta { margin-top: 20px; font-size: 11px; min-height: 46px; padding: 12px 17px; }
+  .launch-art { position: relative; width: 112%; height: auto; aspect-ratio: 1.5; top: auto; right: auto; margin: 4px -6% 22px; }
+  .launch-art img { width: 100%; height: auto; }
+  .launch-edition { top: 33px; right: 13px; font-size: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-art img { animation: none; }
+  .launch-hero a { transition: none; }
+}

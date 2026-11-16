@@ -1,4 +1,805 @@
-@import url('/fonts/fonts.css');
-@import './theme.css';
-@import './commerce.css';
-@import './responsive.css';
+@import "@heroui/styles";
+@import url("/fonts/fonts.css");
+@import "./theme.css";
+@import "./commerce.css";
+@import "./responsive.css";
+@import "./home-hero.css";
+@import "./product-carousel.css";
+@import "./search-placeholder.css";
+@import "./detail.css";
+@import "./account-vouchers.css";
+@import "./news.css";
+@import "./auth.css";
+@import "./location-combobox.css";
+
+/* HeroUI Motion & Animation System */
+/* HeroUI v3 Motion & Animation System */
+:root {
+  /* HeroUI Transition Timing Curves */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-fluid: cubic-bezier(0.32, 0.72, 0, 1); /* HeroUI Apple-style physics curve */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animation Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-moderate: 350ms;
+  --duration-slow: 500ms;
+}
+
+/* -------------------------------------------------------------
+ * HeroUI Keyframe Animations
+ * ------------------------------------------------------------- */
+@keyframes heroui-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes heroui-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes heroui-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroui-overlay-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes heroui-overlay-enter-95 {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroui-overlay-enter-105 {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroui-toast-slide-up {
+  from {
+    opacity: 0;
+    transform: translate3d(-50%, 28px, 0) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroui-dock-slide-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroui-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.88;
+  }
+}
+
+@keyframes heroui-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes heroui-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* -------------------------------------------------------------
+ * 1. Buttons & Interactive Controls (HeroUI Tactile Press & Hover)
+ * ------------------------------------------------------------- */
+.button,
+button.button {
+  transition:
+    transform var(--duration-normal) var(--ease-out-fluid),
+    background-color var(--duration-fast) var(--ease-smooth),
+    border-color var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-normal) var(--ease-out-fluid) !important;
+  will-change: transform;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 40, 32, 0.09);
+}
+
+.button:active,
+button.button:active {
+  transform: scale(0.97) !important;
+}
+
+.button.dark:hover {
+  box-shadow: 0 8px 24px rgba(37, 40, 32, 0.22);
+}
+
+.button.lime:hover {
+  box-shadow: 0 8px 24px rgba(196, 243, 105, 0.38);
+}
+
+/* -------------------------------------------------------------
+ * 2. Cards (ProductCard, BrandCard, Editorial, Panels)
+ * ------------------------------------------------------------- */
+.product-card {
+  transition:
+    transform var(--duration-normal) var(--ease-out-fluid),
+    box-shadow var(--duration-normal) var(--ease-out-fluid),
+    border-color var(--duration-fast) var(--ease-smooth) !important;
+  will-change: transform, box-shadow;
+}
+
+.product-card:hover {
+  box-shadow: 0 14px 32px rgba(37, 40, 32, 0.08), 0 2px 6px rgba(37, 40, 32, 0.04) !important;
+  border-color: #dce1d4 !important;
+}
+
+.product-card:hover:not(.home-product-carousel .product-card) {
+  transform: translateY(-5px) !important;
+}
+
+.product-image img {
+  transition: transform var(--duration-moderate) var(--ease-out-fluid) !important;
+  will-change: transform;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05) !important;
+}
+
+/* Brand Cards */
+.brand-card {
+  transition:
+    transform var(--duration-normal) var(--ease-out-fluid),
+    box-shadow var(--duration-normal) var(--ease-out-fluid) !important;
+  will-change: transform;
+}
+
+.brand-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 10px 24px rgba(37, 40, 32, 0.07);
+}
+
+.brand-card img {
+  transition: transform var(--duration-moderate) var(--ease-out-fluid) !important;
+}
+
+.brand-card:hover img {
+  transform: rotate(-6deg) scale(1.08) !important;
+}
+
+.brand-arrow {
+  transition: transform var(--duration-normal) var(--ease-spring), background var(--duration-fast) var(--ease-smooth);
+}
+
+.brand-card:hover .brand-arrow {
+  transform: scale(1.15) translate(2px, -2px);
+  background: #ffffff;
+  color: var(--ink);
+}
+
+/* -------------------------------------------------------------
+ * 3. Popovers & Dropdowns (HeroUI Overlay Motion)
+ * ------------------------------------------------------------- */
+.category-popover {
+  animation: heroui-overlay-enter-95 240ms var(--ease-out-quad);
+  transform-origin: top center;
+  box-shadow: 0 20px 42px rgba(38, 53, 27, 0.14), 0 4px 12px rgba(38, 53, 27, 0.06) !important;
+}
+
+.suggestions {
+  animation: heroui-overlay-enter-95 200ms var(--ease-out-quad);
+  transform-origin: top center;
+  box-shadow: 0 18px 36px rgba(37, 40, 32, 0.12) !important;
+}
+
+.suggestions > a {
+  transition: background-color var(--duration-fast) var(--ease-smooth), transform var(--duration-fast) var(--ease-smooth);
+}
+
+.suggestions > a:hover {
+  transform: translateX(4px);
+}
+
+.category-model {
+  transition:
+    transform var(--duration-fast) var(--ease-out-fluid),
+    background-color var(--duration-fast) var(--ease-smooth),
+    border-color var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth) !important;
+}
+
+.category-model:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(71, 107, 41, 0.1);
+}
+
+/* -------------------------------------------------------------
+ * 4. Modals & Dialogs (HeroUI Modal Experience)
+ * ------------------------------------------------------------- */
+.modal-backdrop {
+  animation: heroui-overlay-fade-in 200ms var(--ease-out);
+  backdrop-filter: blur(8px) !important;
+}
+
+.image-modal {
+  animation: heroui-overlay-enter-105 280ms var(--ease-out-quad);
+  transform-origin: center center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25) !important;
+  transition: transform var(--duration-normal) var(--ease-out-fluid);
+}
+
+/* -------------------------------------------------------------
+ * 5. Toast Notifications (HeroUI Toast Motion)
+ * ------------------------------------------------------------- */
+.toast {
+  animation: heroui-toast-slide-up 350ms var(--ease-out-fluid) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  transition: transform var(--duration-normal) var(--ease-out-fluid), opacity var(--duration-fast) var(--ease-smooth);
+}
+
+/* -------------------------------------------------------------
+ * 6. Floating Action Dock (Compare Dock)
+ * ------------------------------------------------------------- */
+.compare-dock {
+  animation: heroui-dock-slide-in 320ms var(--ease-spring);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  transition: transform var(--duration-normal) var(--ease-out-fluid), box-shadow var(--duration-normal) var(--ease-smooth);
+}
+
+.compare-dock:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.16) !important;
+}
+
+/* -------------------------------------------------------------
+ * 7. Micro-interactions & Indicators
+ * ------------------------------------------------------------- */
+/* Sale Zap Icon Pulse */
+.sale-icon {
+  animation: heroui-pulse 2.8s ease-in-out infinite;
+}
+
+/* Hero Pill Float */
+.hero-pill {
+  animation: heroui-float 4.2s ease-in-out infinite;
+}
+
+.hero-spark {
+  animation: heroui-pulse 3.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* Swatches color dot hover */
+.swatches > span {
+  transition: transform var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.swatches > span:hover {
+  transform: scale(1.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+/* Quantity Adjuster Buttons */
+.quantity button {
+  transition: background-color var(--duration-fast) var(--ease-smooth), transform 120ms var(--ease-smooth);
+}
+
+.quantity button:active {
+  transform: scale(0.88);
+}
+
+/* Tabs underline & active states */
+.detail-tabs button,
+.auth-tabs button {
+  transition: color var(--duration-fast) var(--ease-smooth), border-color var(--duration-normal) var(--ease-out-fluid);
+}
+
+/* Filter checkboxes & selects */
+.check input {
+  transition: transform 120ms var(--ease-spring);
+}
+
+.check input:active {
+  transform: scale(0.85);
+}
+
+/* Page fade-in on transition */
+.page {
+  animation: heroui-fade-up 320ms var(--ease-out-fluid);
+}
+
+/* -------------------------------------------------------------
+ * 8. Scroll Reveal Motion System
+ * ------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+  transition:
+    opacity 0.7s var(--ease-out-fluid),
+    transform 0.7s var(--ease-out-fluid);
+  will-change: opacity, transform;
+}
+
+.reveal.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Staggered Children Animation */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  transition:
+    opacity 0.6s var(--ease-out-fluid),
+    transform 0.6s var(--ease-out-fluid);
+  will-change: opacity, transform;
+}
+
+.reveal-stagger.is-revealed > *:nth-child(1) {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0.04s;
+}
+
+.reveal-stagger.is-revealed > *:nth-child(2) {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0.12s;
+}
+
+.reveal-stagger.is-revealed > *:nth-child(3) {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0.20s;
+}
+
+.reveal-stagger.is-revealed > *:nth-child(4) {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0.28s;
+}
+
+.reveal-stagger.is-revealed > *:nth-child(5) {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0.36s;
+}
+
+.reveal-stagger.is-revealed > *:nth-child(n+6) {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0.42s;
+}
+
+/* Reveal Scale Variant */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95) translate3d(0, 20px, 0);
+  transition:
+    opacity 0.75s var(--ease-out-fluid),
+    transform 0.75s var(--ease-out-fluid);
+  will-change: opacity, transform;
+}
+
+.reveal-scale.is-revealed {
+  opacity: 1;
+  transform: scale(1) translate3d(0, 0, 0);
+}
+
+/* Reveal Fade-Only Variant */
+.reveal-fade {
+  opacity: 0;
+  transition: opacity 0.65s var(--ease-out-fluid);
+  will-change: opacity;
+}
+
+.reveal-fade.is-revealed {
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------
+ * 9. Motion Reduction for Accessibility
+ * ------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-stagger > *,
+  .reveal-scale,
+  .reveal-fade {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* Category Menu */
+.main-nav{position:relative}.category-nav{align-self:stretch;display:flex;align-items:center}.category-trigger{display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:inherit;font-weight:inherit;padding:14px 0;min-height:46px}.category-trigger.all-categories{padding-right:20px}.category-trigger>svg:last-child{transition:transform .18s}.category-nav.is-open>.category-trigger{color:#476b29}.category-nav.is-open>.category-trigger>svg:last-child{transform:rotate(180deg)}.category-popover{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #e2e7d9;border-radius:0 0 16px 16px;box-shadow:0 18px 35px #26351b20;padding:25px 28px 0;max-height:min(70vh,620px);overflow-y:auto;z-index:45}.category-popover-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:20px}.category-popover-heading .eyebrow{font-size:8px;color:#788967;letter-spacing:1.2px}.category-popover-heading h2{font-size:24px;margin:4px 0 0}.main-nav .category-popover a{white-space:normal}.category-group-grid{display:grid;grid-template-columns:1fr}.category-models{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.main-nav .category-model{display:flex;align-items:center;gap:14px;padding:14px;background:#f8f9f4;border:1px solid transparent;border-radius:10px;min-width:0}.main-nav .category-model:hover,.main-nav .category-model:focus-visible{border-color:#c2d5a6;background:#eff5e6;color:var(--ink)}.category-model>img{width:52px;height:60px;object-fit:contain;mix-blend-mode:multiply;flex:none}.category-model>span{min-width:0;flex:1}.category-model b{font-size:12px;line-height:1.5;display:block}.category-model small{display:block;font-size:9px;font-weight:400;color:#77816d;margin-top:3px}.category-model strong{display:block;font-size:10px;color:#526c36;margin-top:6px}.category-model>svg{color:#8c9980}.category-popover-footer{border-top:1px solid var(--line);font-weight:400;font-size:10px;color:#7b8671;padding:13px 0;margin-top:22px}.all-category-popover .category-group-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:25px}.all-category-popover .category-models{grid-template-columns:1fr}.main-nav .category-group-title{font-size:13px;margin-bottom:12px;font-weight:650;display:flex;align-items:center;gap:7px}.category-group-title>span{font-size:9px;font-weight:400;color:#87947a;margin-left:auto}.all-category-popover .category-model{padding:10px;gap:10px}.all-category-popover .category-model img{width:38px;height:48px}.all-category-popover .category-model b{font-size:11px}.all-category-popover .category-model strong{font-size:9px}.category-empty{font-size:12px;padding:12px 0}.main-nav{gap:16px}
+@media(min-width:641px) and (max-width:1050px){.main-nav{overflow:visible;flex-wrap:wrap;height:auto;min-height:48px;gap:0 20px}.category-trigger{font-size:10px}.category-trigger.all-categories{padding-right:14px}.main-nav>.nav-deal{padding-block:14px}.category-models{grid-template-columns:repeat(2,minmax(0,1fr))}.all-category-popover .category-group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.nav-wrap.open{max-height:calc(100dvh - 150px);overflow-y:auto}.main-nav{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:4px 0 12px}.category-nav{display:block;width:100%;border-bottom:1px solid #eef0e8}.category-trigger,.category-trigger.all-categories{width:100%;justify-content:flex-start;padding:13px 10px;min-height:46px;font-size:12px;border:0}.category-trigger>svg:last-child{margin-left:auto}.category-popover{position:static;width:100%;padding:17px 13px 0;max-height:55vh;border-radius:10px;box-shadow:none;margin-bottom:12px;background:#fafbf7}.category-popover-heading{align-items:flex-start;gap:10px;margin-bottom:15px}.category-popover-heading h2{font-size:20px}.category-popover-heading .eyebrow{font-size:6px;letter-spacing:.8px}.category-popover-heading>.text-link{font-size:9px;text-align:right;max-width:120px}.category-models,.all-category-popover .category-group-grid{grid-template-columns:1fr}.category-models{gap:8px}.main-nav .category-model{padding:12px;gap:12px;background:#fff}.category-model b{font-size:12px}.category-model small{font-size:9px}.category-popover-footer{font-size:8px;line-height:1.7;margin-top:15px;padding:12px 0}.all-category-popover .category-group-grid{gap:20px}.main-nav>a{width:100%;padding:14px 10px;font-size:12px}}
+
+
+/* Hero Select */
+/* HeroUI v3 Custom Select Component Styles */
+
+.hero-select-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 12px;
+}
+
+.hero-select-root.full-width {
+  width: 100%;
+}
+
+.hero-select-label {
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--ink);
+  letter-spacing: -0.1px;
+  user-select: none;
+}
+
+/* Select Trigger Button */
+.hero-select-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 12px;
+  background: #ffffff;
+  border: 1px solid #d8ddcf;
+  border-radius: 9px;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(37, 40, 32, 0.04);
+  transition:
+    border-color var(--duration-fast, 150ms) var(--ease-smooth, ease),
+    background-color var(--duration-fast, 150ms) var(--ease-smooth, ease),
+    box-shadow var(--duration-fast, 150ms) var(--ease-smooth, ease),
+    transform 100ms ease;
+}
+
+.hero-select-trigger:hover {
+  background: #fbfcf9;
+  border-color: #bcc5b0;
+}
+
+.hero-select-trigger:active {
+  transform: scale(0.99);
+}
+
+.hero-select-trigger:focus-visible,
+.hero-select-trigger.focused,
+.hero-select-root.is-open .hero-select-trigger {
+  outline: none;
+  border-color: #5b7e33 !important;
+  box-shadow: 0 0 0 3px rgba(91, 126, 51, 0.16), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  background: #ffffff;
+}
+
+.hero-select-value {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink);
+}
+
+.hero-select-value.is-placeholder {
+  color: #8c9284;
+}
+
+.hero-select-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  color: #727a69;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hero-select-indicator.rotated {
+  transform: rotate(180deg);
+  color: #4b6d26;
+}
+
+/* Floating Popover Container */
+.hero-select-popover {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #dce2d4;
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(37, 40, 32, 0.14), 0 3px 8px rgba(37, 40, 32, 0.06);
+  padding: 5px;
+  z-index: 80;
+  max-height: 240px;
+  overflow-y: auto;
+  animation: heroui-overlay-enter-95 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: top center;
+}
+
+.hero-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* List Item */
+.hero-select-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 11px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    transform 100ms ease;
+}
+
+.hero-select-item:hover {
+  background: #f4f6ee;
+  color: #38511e;
+  transform: translateX(2px);
+}
+
+.hero-select-item.selected {
+  background: #eef4e3;
+  color: #3b5722;
+  font-weight: 650;
+}
+
+/* -------------------------------------------------------------
+ * Global Native Select Elevation to HeroUI Standards
+ * ------------------------------------------------------------- */
+select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2366715b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 15px !important;
+  padding-right: 32px !important;
+  cursor: pointer;
+  border: 1px solid #d8ddcf !important;
+  border-radius: 8px !important;
+  transition: border-color 150ms ease, box-shadow 150ms ease !important;
+}
+
+select:hover {
+  border-color: #bcc5b0 !important;
+  background-color: #fbfcf9 !important;
+}
+
+select:focus,
+select:focus-visible {
+  outline: none !important;
+  border-color: #5b7e33 !important;
+  box-shadow: 0 0 0 3px rgba(91, 126, 51, 0.16) !important;
+  background-color: #ffffff !important;
+}
+
+/* Results bar sort select */
+.sort-select-wrap {
+  min-width: 165px;
+}
+
+.sort-select-wrap .hero-select-trigger {
+  min-height: 36px;
+  padding: 6px 11px;
+  font-weight: 600;
+}
+
+.results-bar select {
+  min-height: 36px;
+  font-size: 11px !important;
+  font-weight: 600;
+  color: var(--ink);
+  background-color: #ffffff;
+}
+
+/* Filter select container */
+.filter-select {
+  margin-bottom: 14px;
+}
+
+@media (max-width: 640px) {
+  .sort-select-wrap {
+    max-width: 145px;
+    min-width: 130px;
+  }
+  .sort-select-wrap .hero-select-trigger {
+    font-size: 10px;
+    padding: 5px 8px;
+    min-height: 32px;
+  }
+  .hero-select-popover {
+    max-height: 200px;
+  }
+}
+
+/* Match the visible product size despite different margins baked into source photos. */
+.product-card .product-image { overflow: hidden; }
+.product-card .product-image img[src*="galaxy-s24-ultra-"] { scale: 1.4; }
+.product-card .product-image img[src*="iphone-15-pro-max-"] { scale: 1.18; }
+.product-card .product-image img[src*="iphone-15-"]:not([src*="pro-max"]) { scale: 1.3; }
+.product-card .product-image img[src*="xiaomi-14-"] { scale: .84; }
+.product-card .product-image img[src*="galaxy-a55-"] { scale: .89; }
+.product-card .product-image img[src*="oppo-reno11-"] { scale: .84; }
+.product-card .product-image img[src*="ipad-10-"] { scale: .97; }
+.product-card .product-image img[src*="airpods-pro-2"] { scale: 1.13; }
+
+/* Selected checkboxes use the brand fill instead of a check glyph. */
+input[type="checkbox"] {
+  appearance: none;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1px solid #aebba0;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+input[type="checkbox"]:checked {
+  border-color: #64863a;
+  background: var(--lime);
+}
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid #64863a;
+  outline-offset: 2px;
+}
+
+.product-card .product-image img {
+  transition: transform var(--duration-moderate) var(--ease-out-fluid), translate var(--duration-moderate) var(--ease-out-fluid) !important;
+}
+.product-card:hover .product-image img { translate: 0 -5px; }
+
+/* Shared form fields: a clear border and a compact focus ring. */
+:is(
+  .form-grid input:not([type="checkbox"]),
+  .form-grid select,
+  .form-grid textarea,
+  .form-stack input:not([type="checkbox"]),
+  .form-stack select,
+  .form-stack textarea,
+  .table-filters input,
+  .table-filters select,
+  .admin-search,
+  .filter-select select,
+  .results-bar select
+) {
+  min-height: 46px;
+  border: 1px solid #d8e0d0 !important;
+  border-radius: 12px !important;
+  background-color: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+:is(.form-grid input, .form-stack input, .table-filters input, .admin-search)::placeholder,
+:is(.form-grid textarea, .form-stack textarea)::placeholder {
+  color: #8b9683;
+  font-size: 12px;
+  opacity: 1;
+}
+
+:is(
+  .form-grid input:not([type="checkbox"]),
+  .form-grid select,
+  .form-grid textarea,
+  .form-stack input:not([type="checkbox"]),
+  .form-stack select,
+  .form-stack textarea,
+  .table-filters input,
+  .table-filters select,
+  .admin-search,
+  .filter-select select,
+  .results-bar select
+):focus {
+  outline: none !important;
+  border-color: #66893e !important;
+  box-shadow: 0 0 0 3px #e5efda !important;
+}
+
+:is(.search, .coupon form):focus-within {
+  border-color: #66893e;
+  box-shadow: 0 0 0 3px #e5efda;
+}
+
+:is(.search, .coupon form) input:focus-visible {
+  outline: none !important;
+}
+
+.cart-fly {
+  position: fixed;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: #252820;
+  background: #c4f369;
+  border-radius: 50%;
+  box-shadow: 0 8px 20px #25282030;
+  pointer-events: none;
+}
+
+.cart-fly svg { width: 21px; height: 21px; }
+.cart-badge-pop { animation: cart-badge-pop .35s ease-out; }
+@keyframes cart-badge-pop {
+  0% { transform: scale(.5); }
+  55% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}

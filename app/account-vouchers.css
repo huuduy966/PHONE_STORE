@@ -1,0 +1,10 @@
+.account-vouchers>h2{font-size:24px;margin:0 0 8px}
+.account-vouchers>p{font-size:12px;margin:0 0 20px}
+.voucher-card{display:flex;align-items:center;gap:18px;margin-bottom:12px}
+.voucher-card>svg{flex:none;color:#5c7f32}
+.voucher-card>div{flex:1;min-width:0}
+.voucher-card h3{font-size:17px;margin:0 0 5px}
+.voucher-card p,.voucher-card small{display:block;font-size:11px;margin:0 0 5px}
+.voucher-card code{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;color:#4e6e31}
+.voucher-card button{flex:none}
+@media(max-width:600px){.voucher-card{flex-wrap:wrap}.voucher-card button{margin-left:42px}}
