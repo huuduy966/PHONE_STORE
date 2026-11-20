@@ -1,5 +1,5 @@
 @import "@heroui/styles";
-@import url("/fonts/fonts.css");
+@import "../public/fonts/fonts.css";
 @import "./theme.css";
 @import "./commerce.css";
 @import "./responsive.css";
@@ -798,5 +798,16 @@ input[type="checkbox"]:focus-visible {
   55% { transform: scale(1.4); }
   100% { transform: scale(1); }
 }
-/* Cyber surfaces complement the launch hero while keeping product details readable. */
-.sale-section{background:radial-gradient(ellipse at 85% 0,#d7d1ff 0,transparent 40%),radial-gradient(ellipse at 10% 80%,#d1fae9 0,transparent 42%),#f4faf7;border-color:#d5ebe3}.countdown{padding:12px 16px;border:1px solid #71c8b3;border-radius:12px;background:linear-gradient(135deg,#ffffffd9,#dcf8f1d9);box-shadow:0 8px 25px #1e88601a,inset 0 1px white;backdrop-filter:blur(12px)}.countdown b{font-family:monospace}.product-card{transition:transform .3s,box-shadow .3s,border-color .3s;transform-style:preserve-3d}.product-card:hover{transform:translateY(-9px) rotateX(2deg);border-color:#46cead;box-shadow:0 20px 42px #087b6330,0 0 0 1px #80ecd1}.product-image img{transition:transform .45s cubic-bezier(.2,.8,.2,1)}.product-card:hover .product-image img{transform:scale(1.08)}.product-card:hover .discount{animation:deal-pulse 1s ease}.suggestions,.category-popover,.filters,.offer{animation:cyber-panel .2s ease both}@keyframes deal-pulse{50%{box-shadow:0 0 18px #6affb4;transform:scale(1.08)}}@keyframes cyber-panel{from{opacity:0;transform:translateY(-5px) scale(.98);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}@media(prefers-reduced-motion:reduce){.product-card,.product-image img,.suggestions,.category-popover,.filters,.offer{animation:none!important;transition:none!important}.product-card:hover{transform:none}}
+
+.detail-options .options button,
+.detail-options .options button.active,
+.main-nav .category-model,
+.main-nav .category-model:hover,
+.main-nav .category-model:focus-visible {
+  background: transparent;
+}
+
+.detail-options .options button.active {
+  border-width: 1px;
+  box-shadow: none;
+}

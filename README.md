@@ -17,10 +17,10 @@ Cần Node.js 24. Chạy `npm ci`, tạo `.env.local` với `TURSO_DATABASE_URL=
 
 ## Quản trị
 
-1. Mở `/tai-khoan` → **Cần hỗ trợ tài khoản?** → **Thiết lập quản trị lần đầu**.
+1. Mở `/account` → **Cần hỗ trợ tài khoản?** → **Thiết lập quản trị lần đầu**.
 2. Nhập tên, email và mật khẩu do bạn chọn (tối thiểu 10 ký tự, chữ hoa/thường/số).
 3. Nhập giá trị `ADMIN_SETUP_TOKEN` trong biến môi trường `ADMIN_SETUP_TOKEN` được thiết lập ở Vercel hoặc `.env.local`.
-4. Vào `/quan-tri`. Mã chỉ tạo được quản trị đầu tiên; máy chủ chặn quản trị thứ hai. Không có mật khẩu admin mặc định.
+4. Vào `/admin`. Mã chỉ tạo được quản trị đầu tiên; máy chủ chặn quản trị thứ hai. Không có mật khẩu admin mặc định.
 
 Không chia sẻ token hoặc đưa file môi trường lên kho mã nguồn.
 

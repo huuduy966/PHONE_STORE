@@ -1,7 +1,7 @@
 import { createClient, type Client, type Config, type InValue, type ResultSet } from '@libsql/client';
 
 type QueryResult = { results: Record<string, unknown>[]; meta: { changes: number } };
-function convert(result: ResultSet): QueryResult { return {results: result.rows as unknown as Record<string, unknown>[],meta:{changes:result.rowsAffected}}; }
+function convert(result: ResultSet): QueryResult { return {results: result.rows.map(row=>({...row})),meta:{changes:result.rowsAffected}}; }
 class Statement {
   args: InValue[] = [];
   client: Client;

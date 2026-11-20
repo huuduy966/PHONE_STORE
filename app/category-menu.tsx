@@ -1,4 +1,5 @@
 'use client';
+import {productImageSource} from '@/lib/product-image';
 import {useEffect,useRef} from 'react';
 import {ArrowUpRight,ChevronDown,Menu} from 'lucide-react';
 import {navigationCategories,categoryProducts,categoryUrl,type NavigationCategory} from '@/lib/categories';
@@ -22,10 +23,10 @@ export default function CategoryMenu({category,open,onOpen}:{category?:Navigatio
       {!category&&<Menu size={18}/>} {category?.label||'Tất cả sản phẩm'} <ChevronDown size={13}/>
     </button>
     {open&&<div id={id} className={'category-popover '+(!category?'all-category-popover':'')} aria-labelledby={id+'-trigger'}>
-      <div className="category-popover-heading"><div><span className="eyebrow">KHÁM PHÁ THEO DANH MỤC</span><h2>{category?.label||'Tìm sản phẩm bạn yêu thích'}</h2></div><Nav to={category?categoryUrl(category):'/dien-thoai'} className="text-link">Xem tất cả {category?.label}<ArrowUpRight size={16}/></Nav></div>
+      <div className="category-popover-heading"><div><span className="eyebrow">KHÁM PHÁ THEO DANH MỤC</span><h2>{category?.label||'Tìm sản phẩm bạn yêu thích'}</h2></div><Nav to={category?categoryUrl(category):'/products'} className="text-link">Xem tất cả {category?.label}<ArrowUpRight size={16}/></Nav></div>
       {groups.length?<div className="category-group-grid">{groups.map(group=><section className="category-group" key={group.category.id}>
         {!category&&<Nav to={categoryUrl(group.category)} className="category-group-title">{group.category.label}<span>{group.products.length} sản phẩm</span></Nav>}
-        <div className="category-models">{group.products.map(p=><Nav key={p.id} to={categoryUrl(group.category,p.id)} className="category-model"><img src={'/images/'+p.image} alt="" width={52} height={60}/><span><b>{p.name}</b><small>{p.storages.join(' · ')}</small><strong>Từ {money(p.price)}</strong></span></Nav>)}</div>
+        <div className="category-models">{group.products.map(p=><Nav key={p.id} to={categoryUrl(group.category,p.id)} className="category-model"><img src={productImageSource(p.image)} alt="" width={52} height={60}/><span><b>{p.name}</b><small>{p.storages.join(' · ')}</small><strong>Từ {money(p.price)}</strong></span></Nav>)}</div>
       </section>)}</div>:<p className="category-empty">Danh mục này chưa có sản phẩm hiển thị.</p>}
       <div className="category-popover-footer">Danh mục được cập nhật theo sản phẩm đang hiển thị tại cửa hàng.</div>
     </div>}

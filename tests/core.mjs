@@ -27,6 +27,7 @@ for(const id of ['iphone-16','galaxy-a56','ipad-air-m3','galaxy-tab-s10-fe','air
   assert.ok(seedVariants(product).every(v=>v.stock>0), id+' stock');
 }
 assert.equal(categoryProducts([],iphone).length,0);
-const modelQuery=new URLSearchParams(categoryUrl(iphone,'iphone-15').split('?')[1]);
-assert.deepEqual(catalog.filter(p=>p.category===modelQuery.get('category')&&p.brand===modelQuery.get('brand')&&p.id===modelQuery.get('model')).map(p=>p.id),['iphone-15']);
+assert.equal(categoryUrl(iphone,'iphone-15'),'/product/iphone-15');
+const categoryQuery=new URLSearchParams(categoryUrl(iphone).split('?')[1]);
+assert.equal(categoryQuery.get('brand'),'Apple');
 console.log('15 core checks passed: search, variants, money, state transitions, dynamic categories and exact model links.');

@@ -1,0 +1,10 @@
+{
+  "generator": "Built-in image_gen",
+  "prompt": "Create a premium photorealistic 3D product campaign artwork for a Vietnamese luxury smartphone store hero. Landscape 1536x1024 composition. Use the three reference images only as accurate hardware appearance references: iPhone 15 Pro Max natural titanium, Samsung Galaxy S24 Ultra titanium gray, Xiaomi 14 jade green. Exactly THREE physical phones, all rear three-quarter views so camera architecture is identifiable, not six front/back copies. iPhone dominant at center leaning 12 degrees, Samsung slightly behind on the right upright, green Xiaomi on the left lower, each visually separated. They hover just above sculptural stepped smoked-glass and brushed dark metal podiums. Sophisticated architectural graphite studio, champagne rim lights across titanium edges, subtle lime reflection for the store palette, deep soft shadows, convincing dimensional thickness and optical glass camera lenses. Large phones fill central 75% of frame with clear breathing space around them, no cropped devices. Subtle circular champagne light sculpture far behind, no floating balls, no space scene. Background very dark charcoal #151918 fading seamlessly to the same dark color at all edges. Premium restrained luxury industrial-design photography, believable product proportions, beautiful material detailing. NO text, no captions, no typography, no UI, no price, no badges. This is the art panel of a website with separate HTML typography. Reference logos may be understated. Deliver crisp high quality.",
+  "asset": "hero-luxury-3d.webp",
+  "references": [
+    "iphone-15-pro-max-natural.jpg",
+    "galaxy-s24-ultra-gray.jpg",
+    "xiaomi-14-green.jpg"
+  ]
+}

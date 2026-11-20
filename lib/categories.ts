@@ -13,8 +13,8 @@ export function categoryProducts(products:Product[],category:NavigationCategory)
   return products.filter(p=>p.category===category.category&&(!category.brand||p.brand===category.brand));
 }
 export function categoryUrl(category:NavigationCategory,model?:string) {
+  if(model)return '/product/'+encodeURIComponent(model);
   const query=new URLSearchParams({category:category.category});
   if(category.brand)query.set('brand',category.brand);
-  if(model)query.set('model',model);
-  return '/dien-thoai?'+query.toString();
+  return '/products?'+query.toString();
 }
