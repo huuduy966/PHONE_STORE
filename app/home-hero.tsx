@@ -14,7 +14,7 @@ export default function HomeHero() {
             <div className="launch-signature"><span>APPLE</span><b aria-hidden="true">/</b><span>SAMSUNG</span><b aria-hidden="true">/</b><span>XIAOMI</span></div>
           </div>
           <div className="launch-art">
-            <Image src="/images/hero-luxury-light-3d.webp" alt="iPhone 15 Pro Max titan, Galaxy S24 Ultra và Xiaomi 14 xanh ngọc trên bệ kính 3D trắng ngà trong không gian studio sáng" width={1536} height={1024} fetchPriority="high" />
+            <Image src="/images/hero-luxury-light-3d.webp" alt="iPhone 15 Pro Max titan, Galaxy S24 Ultra và Xiaomi 14 xanh ngọc trên bệ kính 3D trắng ngà trong không gian studio sáng" width={1536} height={1024} fetchPriority="high" loading="eager" />
           </div>
           <span className="launch-edition" aria-hidden="true">TUYỂN CHỌN / 01</span>
         </div>
